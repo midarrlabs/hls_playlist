@@ -16,4 +16,38 @@ defmodule HlsPlaylistTest do
 
     assert HlsPlaylist.get_segments(keyframes, duration, segment_length) == [4.167, 4.167, 4.167, 3.767, 3.867, 4.167, 3.133, 2.567]
   end
+
+  test "get_playlist" do
+    segment_lengths = [4.167, 4.167, 4.167, 3.767, 3.867, 4.167, 3.133, 2.567]
+    segment_name = "segment"
+
+    expected_playlist =
+    """
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-ALLOW-CACHE:NO
+    #EXT-X-TARGETDURATION:5.0
+    #EXT-X-MEDIA-SEQUENCE:0
+    #EXT-X-PLAYLIST-TYPE:VOD
+    #EXTINF:4.167,
+    segment0.ts
+    #EXTINF:4.167,
+    segment1.ts
+    #EXTINF:4.167,
+    segment2.ts
+    #EXTINF:3.767,
+    segment3.ts
+    #EXTINF:3.867,
+    segment4.ts
+    #EXTINF:4.167,
+    segment5.ts
+    #EXTINF:3.133,
+    segment6.ts
+    #EXTINF:2.567,
+    segment7.ts
+    #EXT-X-ENDLIST\
+    """
+
+    assert HlsPlaylist.get_playlist(segment_lengths, segment_name) == expected_playlist
+  end
 end

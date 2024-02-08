@@ -64,4 +64,26 @@ defmodule HlsPlaylist do
     remaining_segment_length = duration - last_segment
     Enum.reverse([remaining_segment_length |> Float.round(3) | segment_lengths])
   end
+
+  def get_playlist(segment_lengths, segment_name) do
+    {playlist_segments, largest_segment} =
+      Enum.reduce(segment_lengths, {[], 0.0}, fn segl, {acc, current_largest} ->
+        largest_segment = max(segl, current_largest)
+        playlist_segment = "#EXTINF:#{String.Chars.to_string(segl)},\n#{segment_name}#{length(acc)}.ts"
+        {[playlist_segment | acc], largest_segment}
+      end)
+
+    largest_segment_rounded = Float.ceil(largest_segment)
+
+    """
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-ALLOW-CACHE:NO
+    #EXT-X-TARGETDURATION:#{largest_segment_rounded}
+    #EXT-X-MEDIA-SEQUENCE:0
+    #EXT-X-PLAYLIST-TYPE:VOD
+    #{Enum.join(Enum.reverse(playlist_segments), "\n")}
+    #EXT-X-ENDLIST\
+    """
+  end
 end
