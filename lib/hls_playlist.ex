@@ -23,8 +23,6 @@ defmodule HlsPlaylist do
       "ffprobe",
       "-v","error",
       "-skip_frame", "nokey",
-      "-show_entries", "format=duration",
-      "-show_entries", "stream=duration",
       "-show_entries", "packet=pts_time,dts_time,flags",
       "-select_streams", "v",
       "-of", "csv",
