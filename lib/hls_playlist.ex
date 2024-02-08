@@ -36,23 +36,28 @@ defmodule HlsPlaylist do
       |> Enum.filter(fn x -> String.contains?(x, "K__") end)
     end)
     |> Enum.reject(fn x -> Enum.empty?(x) end)
-    |> Enum.map(fn x -> String.trim_leading(Enum.at(x, 0), "packet,")  end)
+    |> Enum.map(fn x -> String.trim_leading(Enum.at(x, 0), "packet,") end)
   end
 
   def get_segments(keyframes, duration, segment_length) do
     {last_segment, segment_lengths, _} =
-      Enum.reduce(keyframes, {0, [], segment_length}, fn kf, {last_segment, segment_lengths, current_desired_time} ->
+      Enum.reduce(keyframes, {0, [], segment_length}, fn kf,
+                                                         {last_segment, segment_lengths,
+                                                          current_desired_time} ->
         desired_segment_length = current_desired_time - last_segment
 
         {kf_next, kf_next_distance} =
           case Enum.find_index(keyframes, &(&1 > kf)) do
-            nil -> {nil, nil}
+            nil ->
+              {nil, nil}
+
             index ->
               {Enum.at(keyframes, index), Enum.at(keyframes, index) - last_segment}
           end
 
         kf_distance = kf - last_segment
         kf_distance_from_desire = abs(desired_segment_length - kf_distance)
+
         kf_next_distance_from_desire =
           case {kf_next, kf_next_distance} do
             {nil, _} -> nil
@@ -62,7 +67,7 @@ defmodule HlsPlaylist do
         cond do
           kf_next_distance_from_desire &&
             kf_next_distance_from_desire <= 1 &&
-            kf_next_distance_from_desire <= kf_distance_from_desire ->
+              kf_next_distance_from_desire <= kf_distance_from_desire ->
             {last_segment, segment_lengths, current_desired_time}
 
           kf_distance >= desired_segment_length ->
@@ -84,7 +89,10 @@ defmodule HlsPlaylist do
     {playlist_segments, largest_segment} =
       Enum.reduce(segment_lengths, {[], 0.0}, fn segl, {acc, current_largest} ->
         largest_segment = max(segl, current_largest)
-        playlist_segment = "#EXTINF:#{String.Chars.to_string(segl)},\n#{segment_name}#{length(acc)}.ts"
+
+        playlist_segment =
+          "#EXTINF:#{String.Chars.to_string(segl)},\n#{segment_name}#{length(acc)}.ts"
+
         {[playlist_segment | acc], largest_segment}
       end)
 
