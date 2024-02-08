@@ -3,6 +3,21 @@ defmodule HlsPlaylist do
   Documentation for `HlsPlaylist`.
   """
 
+  def get_duration(path) do
+    Exile.stream!([
+      "ffprobe",
+      "-v","error",
+      "-show_entries", "stream=duration",
+      "-select_streams", "v",
+      "-of", "csv",
+      "-i", path,
+    ])
+    |> Enum.at(0)
+    |> String.trim()
+    |> String.trim_leading("stream,")
+    |> String.to_float()
+  end
+
   def get_keyframes(path) do
     Exile.stream!([
       "ffprobe",
