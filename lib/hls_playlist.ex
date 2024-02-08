@@ -51,7 +51,7 @@ defmodule HlsPlaylist do
             {last_segment, segment_lengths, current_desired_time}
 
           kf_distance >= desired_segment_length ->
-            new_segment_lengths = [kf_distance |> Float.round(3) | segment_lengths]
+            new_segment_lengths = [kf_distance |> Float.round(6) | segment_lengths]
             new_last_segment = kf
             new_desired_time = current_desired_time + segment_length
             {new_last_segment, new_segment_lengths, new_desired_time}
@@ -62,7 +62,7 @@ defmodule HlsPlaylist do
       end)
 
     remaining_segment_length = duration - last_segment
-    Enum.reverse([remaining_segment_length |> Float.round(3) | segment_lengths])
+    Enum.reverse([remaining_segment_length |> Float.round(6) | segment_lengths])
   end
 
   def get_playlist(segment_lengths, segment_name) do
@@ -73,7 +73,7 @@ defmodule HlsPlaylist do
         {[playlist_segment | acc], largest_segment}
       end)
 
-    largest_segment_rounded = Float.ceil(largest_segment)
+    largest_segment_rounded = trunc(Float.floor(largest_segment))
 
     """
     #EXTM3U

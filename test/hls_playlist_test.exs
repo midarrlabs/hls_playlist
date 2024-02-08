@@ -14,36 +14,63 @@ defmodule HlsPlaylistTest do
     duration = 30.000000
     segment_length = 3
 
-    assert HlsPlaylist.get_segments(keyframes, duration, segment_length) == [4.167, 4.167, 4.167, 3.767, 3.867, 4.167, 3.133, 2.567]
+    assert HlsPlaylist.get_segments(keyframes, duration, segment_length) ==
+             [
+               4.166667,
+               4.166666,
+               4.166667,
+               3.766667,
+               3.866666,
+               4.166667,
+               3.133333,
+               2.566667
+             ]
   end
 
   test "get_playlist" do
-    segment_lengths = [4.167, 4.167, 4.167, 3.767, 3.867, 4.167, 3.133, 2.567]
+    segment_lengths =
+      [
+        4.166667,
+        4.166666,
+        4.166667,
+        3.766667,
+        3.866666,
+        4.166667,
+        3.133333,
+        2.566667
+      ]
     segment_name = "segment"
 
+    # a little off from ffmpeg-generated.m3u8
+    #
+    # #EXTINF:4.166666, should be #EXTINF:4.166667
+    # segment1.ts
+    #
+    # #EXTINF:3.866666, should be #EXTINF:3.866667
+    # segment4.ts
     expected_playlist =
     """
     #EXTM3U
     #EXT-X-VERSION:3
     #EXT-X-ALLOW-CACHE:NO
-    #EXT-X-TARGETDURATION:5.0
+    #EXT-X-TARGETDURATION:4
     #EXT-X-MEDIA-SEQUENCE:0
     #EXT-X-PLAYLIST-TYPE:VOD
-    #EXTINF:4.167,
+    #EXTINF:4.166667,
     segment0.ts
-    #EXTINF:4.167,
+    #EXTINF:4.166666,
     segment1.ts
-    #EXTINF:4.167,
+    #EXTINF:4.166667,
     segment2.ts
-    #EXTINF:3.767,
+    #EXTINF:3.766667,
     segment3.ts
-    #EXTINF:3.867,
+    #EXTINF:3.866666,
     segment4.ts
-    #EXTINF:4.167,
+    #EXTINF:4.166667,
     segment5.ts
-    #EXTINF:3.133,
+    #EXTINF:3.133333,
     segment6.ts
-    #EXTINF:2.567,
+    #EXTINF:2.566667,
     segment7.ts
     #EXT-X-ENDLIST\
     """
