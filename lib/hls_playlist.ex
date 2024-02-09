@@ -34,7 +34,13 @@ defmodule HlsPlaylist do
       |> Enum.filter(fn x -> String.contains?(x, "K__") end)
     end)
     |> Enum.reject(fn x -> Enum.empty?(x) end)
-    |> Enum.map(fn x -> String.trim_leading(Enum.at(x, 0), "packet,") end)
+    |> Enum.map(fn x ->
+      String.trim_leading(Enum.at(x, 0), "packet,")
+      |> String.trim_trailing(",K__")
+      |> String.split(",")
+      |> Kernel.hd()
+      |> String.to_float
+    end)
   end
 
   def get_segments(keyframes, duration, segment_length) do
@@ -54,12 +60,12 @@ defmodule HlsPlaylist do
           end
 
         kf_distance = kf - last_segment
-        kf_distance_from_desire = abs(desired_segment_length - kf_distance)
+        kf_distance_from_desire = Kernel.abs(desired_segment_length - kf_distance)
 
         kf_next_distance_from_desire =
           case {kf_next, kf_next_distance} do
             {nil, _} -> nil
-            {_next_kf, next_distance} -> abs(desired_segment_length - next_distance)
+            {_next_kf, next_distance} -> Kernel.abs(desired_segment_length - next_distance)
           end
 
         cond do
@@ -84,26 +90,24 @@ defmodule HlsPlaylist do
   end
 
   def get_playlist(segment_lengths, segment_name) do
-    {playlist_segments, largest_segment} =
+    {segments, largest_segment} =
       Enum.reduce(segment_lengths, {[], 0.0}, fn segl, {acc, current_largest} ->
         largest_segment = max(segl, current_largest)
 
-        playlist_segment =
+        extinf_segment =
           "#EXTINF:#{String.Chars.to_string(segl)},\n#{segment_name}#{length(acc)}.ts"
 
-        {[playlist_segment | acc], largest_segment}
+        {[extinf_segment | acc], largest_segment}
       end)
-
-    largest_segment_rounded = trunc(Float.floor(largest_segment))
 
     """
     #EXTM3U
     #EXT-X-VERSION:3
     #EXT-X-ALLOW-CACHE:NO
-    #EXT-X-TARGETDURATION:#{largest_segment_rounded}
+    #EXT-X-TARGETDURATION:#{Kernel.trunc(Float.floor(largest_segment))}
     #EXT-X-MEDIA-SEQUENCE:0
     #EXT-X-PLAYLIST-TYPE:VOD
-    #{Enum.join(Enum.reverse(playlist_segments), "\n")}
+    #{Enum.join(Enum.reverse(segments), "\n")}
     #EXT-X-ENDLIST\
     """
   end
