@@ -31,12 +31,12 @@ defmodule HlsPlaylist do
     |> Enum.map(fn x ->
       String.trim(x)
       |> String.split("\n")
-      |> Enum.filter(fn x -> String.contains?(x, "K__") end)
+      |> Enum.filter(fn x -> String.contains?(x, "K_") end)
     end)
     |> Enum.reject(fn x -> Enum.empty?(x) end)
     |> Enum.map(fn x ->
       String.trim_leading(Enum.at(x, 0), "packet,")
-      |> String.trim_trailing(",K__")
+      |> String.trim_trailing(",K_")
       |> String.split(",")
       |> Kernel.hd()
       |> String.to_float
