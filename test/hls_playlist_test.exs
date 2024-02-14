@@ -1,14 +1,13 @@
 defmodule HlsPlaylistTest do
   use ExUnit.Case
-  doctest HlsPlaylist
 
   @media_path "dev/sample__1080__libx264__ac3__30s__video.mp4"
 
-  test "get_duration" do
+  test "get duration" do
     assert HlsPlaylist.get_duration(@media_path) == 30.0
   end
 
-  test "get_keyframes" do
+  test "get keyframes" do
     assert HlsPlaylist.get_keyframes(@media_path) == [
              0.0,
              4.166667,
@@ -21,7 +20,7 @@ defmodule HlsPlaylistTest do
            ]
   end
 
-  test "get_segments" do
+  test "get segments" do
     assert HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path), 3) ==
              [
                4.166667,
@@ -35,16 +34,17 @@ defmodule HlsPlaylistTest do
              ]
   end
 
-  test "get_playlist" do
-    assert HlsPlaylist.get_playlist(HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path), 3), "segment") ==
+  test "get playlist" do
+    assert HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path))
+           |> HlsPlaylist.get_playlist("http://some-url&some-query=param") ==
 
      # a little off from generated-ffmpeg.m3u8
      #
      # #EXTINF:4.166666, should be #EXTINF:4.166667
-     # segment1.ts
+     # segment=1
      #
      # #EXTINF:3.866666, should be #EXTINF:3.866667
-     # segment4.ts
+     # segment=4
       """
       #EXTM3U
       #EXT-X-VERSION:3
@@ -53,21 +53,21 @@ defmodule HlsPlaylistTest do
       #EXT-X-MEDIA-SEQUENCE:0
       #EXT-X-PLAYLIST-TYPE:VOD
       #EXTINF:4.166667,
-      segment0.ts
+      http://some-url&some-query=param&segment=0
       #EXTINF:4.166666,
-      segment1.ts
+      http://some-url&some-query=param&segment=1
       #EXTINF:4.166667,
-      segment2.ts
+      http://some-url&some-query=param&segment=2
       #EXTINF:3.766667,
-      segment3.ts
+      http://some-url&some-query=param&segment=3
       #EXTINF:3.866666,
-      segment4.ts
+      http://some-url&some-query=param&segment=4
       #EXTINF:4.166667,
-      segment5.ts
+      http://some-url&some-query=param&segment=5
       #EXTINF:3.133333,
-      segment6.ts
+      http://some-url&some-query=param&segment=6
       #EXTINF:2.566667,
-      segment7.ts
+      http://some-url&some-query=param&segment=7
       #EXT-X-ENDLIST\
       """
   end
