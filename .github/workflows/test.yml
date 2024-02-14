@@ -19,6 +19,9 @@ jobs:
         elixir: [ '1.15' ]
     steps:
       - uses: actions/checkout@v3
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        with:
+          ffmpeg-version: 5.1.4-r0
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
