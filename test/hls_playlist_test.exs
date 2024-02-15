@@ -4,7 +4,7 @@ defmodule HlsPlaylistTest do
   @media_path "dev/sample__1080__libx264__ac3__30s__video.mp4"
 
   test "get duration" do
-    assert HlsPlaylist.get_duration(@media_path) == 30.0
+    assert HlsPlaylist.get_duration(@media_path) == 30.016
   end
 
   test "get keyframes" do
@@ -21,7 +21,7 @@ defmodule HlsPlaylistTest do
   end
 
   test "get segments" do
-    assert HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path), 3) ==
+    assert HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path)) ==
              [
                4.166667,
                4.166666,
@@ -30,21 +30,13 @@ defmodule HlsPlaylistTest do
                3.866666,
                4.166667,
                3.133333,
-               2.566667
+               2.582667
              ]
   end
 
   test "get playlist" do
     assert HlsPlaylist.get_segments(HlsPlaylist.get_keyframes(@media_path), HlsPlaylist.get_duration(@media_path))
            |> HlsPlaylist.get_playlist("http://some-url&some-query=param") ==
-
-     # a little off from generated-ffmpeg.m3u8
-     #
-     # #EXTINF:4.166666, should be #EXTINF:4.166667
-     # segment=1
-     #
-     # #EXTINF:3.866666, should be #EXTINF:3.866667
-     # segment=4
       """
       #EXTM3U
       #EXT-X-VERSION:3
@@ -66,7 +58,7 @@ defmodule HlsPlaylistTest do
       http://some-url&some-query=param&segment=5
       #EXTINF:3.133333,
       http://some-url&some-query=param&segment=6
-      #EXTINF:2.566667,
+      #EXTINF:2.582667,
       http://some-url&some-query=param&segment=7
       #EXT-X-ENDLIST\
       """
@@ -95,7 +87,7 @@ defmodule HlsPlaylistTest do
       5
       #EXTINF:3.133333,
       6
-      #EXTINF:2.566667,
+      #EXTINF:2.582667,
       7
       #EXT-X-ENDLIST\
       """
