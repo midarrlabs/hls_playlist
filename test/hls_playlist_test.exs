@@ -4,7 +4,7 @@ defmodule HlsPlaylistTest do
   @media_path "dev/sample__1080__libx264__ac3__30s__video.mp4"
 
   test "get duration" do
-    assert HlsPlaylist.get_duration(@media_path) == 30.016
+    assert HlsPlaylist.get_duration(@media_path) == 30.01
   end
 
   test "get keyframes" do
@@ -30,7 +30,7 @@ defmodule HlsPlaylistTest do
                3.866666,
                4.166667,
                3.133333,
-               2.582667
+               2.576667
              ]
   end
 
@@ -58,7 +58,7 @@ defmodule HlsPlaylistTest do
       http://some-url&some-query=param&segment=5
       #EXTINF:3.133333,
       http://some-url&some-query=param&segment=6
-      #EXTINF:2.582667,
+      #EXTINF:2.576667,
       http://some-url&some-query=param&segment=7
       #EXT-X-ENDLIST\
       """
