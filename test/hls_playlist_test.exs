@@ -65,33 +65,17 @@ defmodule HlsPlaylistTest do
   end
 
   test "get segment offset" do
-    playlist =
-      """
-      #EXTM3U
-      #EXT-X-VERSION:3
-      #EXT-X-ALLOW-CACHE:NO
-      #EXT-X-TARGETDURATION:4
-      #EXT-X-MEDIA-SEQUENCE:0
-      #EXT-X-PLAYLIST-TYPE:VOD
-      #EXTINF:4.166667,
-      0
-      #EXTINF:4.166666,
-      1
-      #EXTINF:4.166667,
-      2
-      #EXTINF:3.766667,
-      3
-      #EXTINF:3.866666,
-      4
-      #EXTINF:4.166667,
-      5
-      #EXTINF:3.133333,
-      6
-      #EXTINF:2.582667,
-      7
-      #EXT-X-ENDLIST\
-      """
+    segments = [
+      4.166667,
+      4.166666,
+      4.166667,
+      3.766667,
+      3.866666,
+      4.166667,
+      3.133333,
+      2.576667
+    ]
 
-    assert {3.766667, 12.5} = HlsPlaylist.get_segment_offset(String.split(playlist), String.to_integer("3"))
+    assert {3.766667, 12.5} = HlsPlaylist.get_segment_offset(segments, String.to_integer("3"))
   end
 end

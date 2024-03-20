@@ -79,23 +79,9 @@ defmodule HlsPlaylist do
     """
   end
 
-  def get_segment_offset(playlist, target_segment, current_duration \\ 0.0, total_duration \\ 0.0, index \\ 0) do
-    case playlist do
-      [line | rest] ->
-        case String.match?(line, ~r{^#EXTINF:(\d+\.\d+),}) do
-          true ->
-            [_, segment_duration] = Regex.run(~r{^#EXTINF:(\d+\.\d+),}, line, capture: :all)
-            segment_duration = String.to_float(segment_duration)
-
-            if index == target_segment do
-              {segment_duration, total_duration + current_duration}  # Return both the duration of the target segment and total offset duration
-            else
-              get_segment_offset(rest, target_segment, current_duration + segment_duration, total_duration, index + 1)
-            end
-
-          false ->
-            get_segment_offset(rest, target_segment, current_duration, total_duration, index)
-        end
-    end
+  def get_segment_offset(segments, index) when is_list(segments) and is_integer(index) do
+    value = Enum.at(segments, index)
+    sum_previous = Enum.sum(Enum.take(segments, index))
+    {value, sum_previous}
   end
 end
