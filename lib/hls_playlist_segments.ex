@@ -5,8 +5,7 @@ defmodule HlsPlaylist.Segments do
   end
 
   defp spread_duration(duration, _segment_length, acc) when duration <= 0 do
-    Enum.map(acc, fn x -> Float.round((x * 1.0), 2) end)
-    |> Enum.reverse()
+    Enum.reverse(acc)
   end
 
   defp spread_duration(duration, segment_length, acc) do
