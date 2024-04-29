@@ -41,7 +41,7 @@ defmodule HlsPlaylistTest do
       #EXTM3U
       #EXT-X-VERSION:3
       #EXT-X-ALLOW-CACHE:NO
-      #EXT-X-TARGETDURATION:4
+      #EXT-X-TARGETDURATION:5
       #EXT-X-MEDIA-SEQUENCE:0
       #EXT-X-PLAYLIST-TYPE:VOD
       #EXTINF:4.166667,

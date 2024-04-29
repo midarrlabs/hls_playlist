@@ -71,7 +71,7 @@ defmodule HlsPlaylist do
     #EXTM3U
     #EXT-X-VERSION:3
     #EXT-X-ALLOW-CACHE:NO
-    #EXT-X-TARGETDURATION:#{Kernel.trunc(Float.floor(largest_segment))}
+    #EXT-X-TARGETDURATION:#{Kernel.trunc(Float.ceil(largest_segment))}
     #EXT-X-MEDIA-SEQUENCE:0
     #EXT-X-PLAYLIST-TYPE:VOD
     #{Enum.join(Enum.reverse(segments), "\n")}
