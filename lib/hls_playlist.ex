@@ -79,9 +79,9 @@ defmodule HlsPlaylist do
     """
   end
 
-  def get_segment_offset(segments, index) when is_list(segments) and is_integer(index) do
+  def get_segment_offset(segments, index, overlap) when is_list(segments) and is_integer(index) do
     value = Enum.at(segments, index)
-    sum_previous = Enum.sum(Enum.take(segments, index))
+    sum_previous = Enum.sum(Enum.take(segments, index)) - (overlap * index)
     {value, sum_previous}
   end
 end

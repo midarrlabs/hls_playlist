@@ -64,7 +64,7 @@ defmodule HlsPlaylistTest do
       """
   end
 
-  test "get segment offset" do
+  test "get segment offset with overlap" do
     segments = [
       4.166667,
       4.166666,
@@ -75,7 +75,56 @@ defmodule HlsPlaylistTest do
       3.133333,
       2.576667
     ]
+    overlap = 1.0
 
-    assert {3.766667, 12.5} = HlsPlaylist.get_segment_offset(segments, String.to_integer("3"))
+    assert {3.766667, 9.5} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
+  end
+
+  test "get segment offset with different overlap" do
+    segments = [
+      4.166667,
+      4.166666,
+      4.166667,
+      3.766667,
+      3.866666,
+      4.166667,
+      3.133333,
+      2.576667
+    ]
+    overlap = 0.5
+
+    assert {3.766667, 11.0} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
+  end
+
+  test "get segment offset for first segment" do
+    segments = [
+      4.166667,
+      4.166666,
+      4.166667,
+      3.766667,
+      3.866666,
+      4.166667,
+      3.133333,
+      2.576667
+    ]
+    overlap = 1.0
+
+    assert {4.166667, 0.0} = HlsPlaylist.get_segment_offset(segments, 0, overlap)
+  end
+
+  test "get segment offset for last segment" do
+    segments = [
+      4.166667,
+      4.166666,
+      4.166667,
+      3.766667,
+      3.866666,
+      4.166667,
+      3.133333,
+      2.576667
+    ]
+    overlap = 1.0
+
+    assert {2.576667, 20.433332999999998} = HlsPlaylist.get_segment_offset(segments, 7, overlap)
   end
 end
