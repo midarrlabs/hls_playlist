@@ -77,7 +77,7 @@ defmodule HlsPlaylistTest do
     ]
     overlap = 1.0
 
-    assert {3.766667, 9.5} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
+    assert {"00:00:03.767", "00:00:09.500"} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
   end
 
   test "get segment offset with different overlap" do
@@ -93,7 +93,7 @@ defmodule HlsPlaylistTest do
     ]
     overlap = 0.5
 
-    assert {3.766667, 11.0} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
+    assert {"00:00:03.767", "00:00:11.000"} = HlsPlaylist.get_segment_offset(segments, 3, overlap)
   end
 
   test "get segment offset for first segment" do
@@ -109,7 +109,7 @@ defmodule HlsPlaylistTest do
     ]
     overlap = 1.0
 
-    assert {4.166667, 0.0} = HlsPlaylist.get_segment_offset(segments, 0, overlap)
+    assert {"00:00:04.167", "00:00:00.000"} = HlsPlaylist.get_segment_offset(segments, 0, overlap)
   end
 
   test "get segment offset for last segment" do
@@ -125,6 +125,6 @@ defmodule HlsPlaylistTest do
     ]
     overlap = 1.0
 
-    assert {2.576667, 20.433332999999998} = HlsPlaylist.get_segment_offset(segments, 7, overlap)
+    assert {"00:00:02.577", "00:00:20.433"} = HlsPlaylist.get_segment_offset(segments, 7, overlap)
   end
 end
