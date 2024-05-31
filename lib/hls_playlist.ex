@@ -67,11 +67,13 @@ defmodule HlsPlaylist do
         {[extinf_segment | acc], largest_segment}
       end)
 
+    target_duration = Float.ceil(largest_segment)
+
     """
     #EXTM3U
     #EXT-X-VERSION:3
     #EXT-X-ALLOW-CACHE:NO
-    #EXT-X-TARGETDURATION:#{Kernel.trunc(Float.ceil(largest_segment))}
+    #EXT-X-TARGETDURATION:#{Kernel.trunc(target_duration)}
     #EXT-X-MEDIA-SEQUENCE:0
     #EXT-X-PLAYLIST-TYPE:VOD
     #{Enum.join(Enum.reverse(segments), "\n")}
