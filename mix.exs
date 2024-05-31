@@ -4,7 +4,7 @@ defmodule HlsPlaylist.MixProject do
   def project do
     [
       app: :hls_playlist,
-      version: "0.4.0",
+      version: "0.5.0",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       description: "Simple HLS playlist - m3u8",
