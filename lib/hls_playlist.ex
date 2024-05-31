@@ -80,7 +80,7 @@ defmodule HlsPlaylist do
   end
 
   def get_segment_offset(segments, index, overlap) when is_list(segments) and is_integer(index) do
-    value = Enum.at(segments, index)
+    value = Enum.at(segments, index) - overlap
     sum_previous = Enum.sum(Enum.take(segments, index)) - (overlap * index)
     {format_time(value), format_time(sum_previous)}
   end
@@ -96,23 +96,19 @@ defmodule HlsPlaylist do
     "#{pad(hours)}:#{pad(minutes)}:#{pad(secs)}.#{pad_millis(millis)}"
   end
 
-  defp pad(value) when value < 10 do
-    "0#{value}"
-  end
-
   defp pad(value) do
-    "#{value}"
-  end
-
-  defp pad_millis(value) when value < 10 do
-    "00#{value}"
-  end
-
-  defp pad_millis(value) when value < 100 do
-    "0#{value}"
+    if value < 10 do
+      "0#{value}"
+    else
+      "#{value}"
+    end
   end
 
   defp pad_millis(value) do
-    "#{value}"
+    cond do
+      value < 10 -> "00#{value}"
+      value < 100 -> "0#{value}"
+      true -> "#{value}"
+    end
   end
 end
